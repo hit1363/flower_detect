@@ -11,7 +11,7 @@ Both write run outputs under `supplementary/runs/` and pack `flower_supplementar
 
 1. Copy this project folder and the shared dataset into the team's Google Drive.
 2. Open a GPU runtime and mount Drive.
-3. Install the current PyTorch build supported by the selected runtime, then install Ultralytics for the five current-family runs.
+3. Install the current PyTorch build supported by the selected runtime, then install Ultralytics for the five current-family runs: `pip install -q ultralytics==8.4.218 pyyaml`. PyYAML must be explicit — the training script imports `yaml` directly and Ultralytics does not always pull it in.
 4. Run the dataset validation/split commands after copying the project into the runtime's persistent storage. The generated data.yaml contains absolute paths for both training stacks.
 5. Clone the upstream YOLOv7 repository. Download its official tiny checkpoint into that checkout (or pass its full path with `--weights`):
 
