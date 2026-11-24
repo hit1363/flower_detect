@@ -1,0 +1,104 @@
+\documentclass[conference]{IEEEtran}
+\IEEEoverridecommandlockouts
+\usepackage{cite}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{url}
+
+\title{Comparative Evaluation of YOLO Detectors for Single-Class Flower Detection on a Self-Collected Dataset}
+
+\author{
+\IEEEauthorblockN{Member 1, Member 2, Member 3, Member 4}
+\IEEEauthorblockA{Department / University\\
+Email: replace-with-group-contact}
+}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+This paper compares six YOLO object-detection families for detecting flowers as a single class. The planned dataset contains at least 400 usable, self-collected photographs with manually reviewed bounding-box annotations. YOLOv7, YOLOv8, YOLOv9, YOLOv10, YOLO11 and YOLO26 are fine-tuned using the same group-aware data split and 640-pixel input size; each run is evaluated at epochs 15 and 30. We report precision, recall, F1, mAP@0.5, mAP@0.5:0.95 and trainable parameters. The final abstract must replace this sentence with the measured best model and metrics: \emph{[insert actual test results after all runs]}.
+\end{abstract}
+
+\begin{IEEEkeywords}
+flower detection, object detection, YOLO, dataset annotation, model comparison
+\end{IEEEkeywords}
+
+\section{Introduction}
+Flower imagery is used in horticulture, crop monitoring and phenology studies, where reliable localization can support counting and downstream analysis. These tasks require a detector to locate flower instances in natural scenes rather than assign one category to a whole cropped image. Field imagery can include changes in illumination, scale, viewpoint, background and occlusion, which make consistent collection and annotation important \cite{jiang2020deepflower,yu2024ynu}.
+
+The YOLO family provides single-stage object detectors with a history of architecture and training changes \cite{redmon2016yolo,wang2022yolov7,wang2024yolov9,wang2024yolov10}. The required comparison includes YOLOv7, YOLOv8, YOLOv9, YOLOv10, YOLO11 and YOLO26. The purpose of this project is to build a small dataset collected by a four-member group and compare the six model families after 15 and 30 training epochs on the same held-out images.
+
+This work makes three course-project contributions: (1) a documented, single-class flower detection dataset with original and annotated files; (2) an epoch-controlled comparison with model size and detection metrics reported together; and (3) a reproducible record of data splits, package versions, training settings and test results. The comparison is limited to the collected domain and should not be interpreted as a universal ranking of model families.
+
+\section{Literature Review}
+\subsection{Flower datasets and recognition}
+Early flower benchmarks focused mainly on fine-grained image classification. Nilsback and Zisserman studied visually similar flower categories using color, shape and texture cues \cite{nilsback2006vocabulary}. Their later flower dataset work also examined a large number of classes \cite{nilsback2008classification}. Flower segmentation research highlights variation in viewpoint, illumination, scale and petal shape \cite{nilsback2007segmentation}. These studies motivate the visual diversity of flower imagery, but classification and segmentation datasets do not automatically provide the instance boxes needed for this project.
+
+More recent datasets support both flower classification and object detection. The YNU Flower benchmark includes commercial flower images and detection annotations, making it relevant to both image-level and object-level tasks \cite{yu2024ynu}. DeepFlower uses field images and bounding-box annotations to characterize flowering patterns in cotton \cite{jiang2020deepflower}. PlantDoc demonstrates the broader difficulty of natural agricultural imagery and object-level plant annotation, although its main task and labels differ from single-class bloom detection \cite{singh2020plantdoc}. Together, this work shows why collection conditions and annotation definitions must be stated alongside model results.
+
+\subsection{YOLO detectors}
+YOLO formulates detection as a single network prediction over the image \cite{redmon2016yolo}. YOLOv7 studies trainable bag-of-freebies methods for real-time detection \cite{wang2022yolov7}; YOLOv9 introduces Programmable Gradient Information and GELAN \cite{wang2024yolov9}; and YOLOv10 studies an end-to-end detector design \cite{wang2024yolov10}. Ultralytics provides implementations and documentation for YOLOv8 and YOLO11 \cite{ultralytics2023yolov8,ultralytics2024yolo11}. YOLO26 is described in a 2026 technical report and has released detection checkpoints \cite{jocher2026yolo26}. These model families use different implementations and training recipes, so the exact checkpoint, software version and run configuration must be reported.
+
+\subsection{Evaluation and project gap}
+Object-detection benchmarks report precision, recall and average precision under explicit IoU rules. PASCAL VOC established a widely used detection benchmark protocol \cite{everingham2010voc}; COCO reports AP over IoU thresholds from 0.50 to 0.95 and also reports AP at 0.50 \cite{lin2014coco}. Flower-specific studies establish the value of instance localization for bloom analysis, while flower classification benchmarks address a different prediction target \cite{nilsback2008classification,jiang2020deepflower,yu2024ynu}. This project therefore evaluates a single target class with bounding boxes and compares all required model families on one locally collected split at two epoch checkpoints. The results will answer a course-scoped comparison question; they will not establish performance across flower species, locations or seasons.
+
+\section{Methodology}
+\subsection{Study design}
+The study compares six pretrained object detectors: YOLOv7-tiny, YOLOv8n, YOLOv9t, YOLOv10n, YOLO11n and YOLO26n. Each model is trained once for 30 epochs, and the saved model states at epochs 15 and 30 are evaluated, producing 12 test evaluations. The smallest official pretrained detection variant available for each family is used; exact filenames and trainable parameter counts are recorded. Since training stacks differ, the experiment compares reproducible model-and-recipe combinations rather than isolating architecture alone.
+
+\subsection{Image collection and annotation}
+Four group members will collect approximately 450 original photographs, with at least 400 retained after duplicate and quality review. Images will vary in distance, background and natural lighting. The unchanged source files will be stored separately from annotations. Each clearly identifiable flower head is assigned one bounding box and class ID 0, named \emph{flower}. Stems and leaves are excluded. Partly occluded blooms are annotated when the visible structure is identifiable; ambiguous dense clusters are reviewed under the shared annotation rules.
+
+Annotations use the YOLO detection format, with one text file per image and normalized center-x, center-y, width and height values. A second member reviews at least 20\% of the labels. Before the split is frozen, the team checks for duplicate file hashes, missing labels, invalid class IDs, out-of-range boxes and missing capture metadata. Dataset totals and the shared Drive URL will be inserted after collection: \emph{[insert final image and box counts, capture dates, and dataset link]}.
+
+\subsection{Preprocessing and data split}
+The frozen dataset is split into 70\% training, 20\% validation and 10\% test images. Images from the same capture burst or capture group remain in a single split to reduce near-duplicate leakage. The split script uses seed 42 and copies files without modifying source images. The resulting dataset configuration specifies one class and a 640-pixel image size. Augmentation is applied by the training implementation to training data only.
+
+\subsection{Training procedure}
+Google Colab is the primary GPU environment and Kaggle GPU is the fallback. YOLOv7 is trained from the upstream WongKinYiu repository; YOLOv8, YOLOv9, YOLOv10, YOLO11 and YOLO26 use the Ultralytics package. Each run starts from its official pretrained detection checkpoint, uses the same frozen dataset and 640-pixel input, and trains for 30 epochs with batch size 8. The Ultralytics runs use seed 42. The upstream YOLOv7 code initializes its seed internally; that value and all framework differences are recorded with the results.
+
+The train/validation split is used during training. The 15- and 30-epoch checkpoints are evaluated only on the held-out test split. For YOLOv7, a narrow checkpoint-saving change preserves the required epoch states. For the other families, an epoch callback copies the requested checkpoints to the run folder. Each run records model filename, framework/PyTorch versions, GPU, seed, batch size, image size, run directory and training output.
+
+\subsection{Evaluation metrics}
+The comparison reports the number of classes, total and trainable parameters, precision, recall, F1, mAP@0.5 and mAP@0.5:0.95. F1 is calculated as \(2PR/(P+R)\) from the precision and recall values returned by the corresponding validator; it is zero when both values are zero. Both mAP values are produced by the framework's standard detection evaluator over the same test split. Evaluation uses 640-pixel images, confidence threshold 0.001 and NMS IoU threshold 0.65 where supported. The report will identify each framework and its version so that metric implementation differences remain visible.
+
+\section{Results and Discussion}
+No experimental results are available yet. Populate Table~\ref{tab:results} only from supplementary/benchmark\_results.csv after all 12 evaluations complete. Discuss the measured effect of training duration, the parameter/performance trade-off, false positives and missed flowers on test examples, and limitations of comparing different training implementations.
+
+\begin{table*}[t]
+\caption{Test-set results at the prescribed checkpoints. Replace blank cells with measured values.}
+\label{tab:results}
+\centering
+\small
+\begin{tabular}{llrrrrrrrr}
+\toprule
+Model & Variant & Epoch & Classes & Trainable params. & Precision & Recall & F1 & mAP@0.5 & mAP@0.5:0.95 \\
+\midrule
+% RESULTS-TABLE-BEGIN generated by scripts/build_submission.py; do not hand-edit between these markers
+YOLOv7 & tiny & 15 & 1 & -- & -- & -- & -- & -- & -- \\
+YOLOv7 & tiny & 30 & 1 & -- & -- & -- & -- & -- & -- \\
+YOLOv8 & n & 15 & 1 & -- & -- & -- & -- & -- & -- \\
+YOLOv8 & n & 30 & 1 & -- & -- & -- & -- & -- & -- \\
+YOLOv9 & t & 15 & 1 & -- & -- & -- & -- & -- & -- \\
+YOLOv9 & t & 30 & 1 & -- & -- & -- & -- & -- & -- \\
+YOLOv10 & n & 15 & 1 & -- & -- & -- & -- & -- & -- \\
+YOLOv10 & n & 30 & 1 & -- & -- & -- & -- & -- & -- \\
+YOLO11 & n & 15 & 1 & -- & -- & -- & -- & -- & -- \\
+YOLO11 & n & 30 & 1 & -- & -- & -- & -- & -- & -- \\
+YOLO26 & n & 15 & 1 & -- & -- & -- & -- & -- & -- \\
+YOLO26 & n & 30 & 1 & -- & -- & -- & -- & -- & -- \\
+% RESULTS-TABLE-END
+\bottomrule
+\end{tabular}
+\end{table*}
+
+\section{Limitations and Future Work}
+The dataset is small, has one generic class and represents only the places and conditions sampled by four collectors. Bounding-box consistency may vary for occluded blooms and dense groups. The required model families also use different software stacks and native training defaults. Future work could expand the dataset across seasons and locations, add species-specific labels, increase the number of independent training seeds, and compare inference speed on a fixed device.
+
+\section{Conclusion}
+Complete this section after evaluation. State which required model/checkpoint performed best on the held-out set, report its measured metrics and parameter count, and summarize the main limitation. Do not infer a general ranking from this one-class dataset.
+
+\bibliographystyle{IEEEtran}
+\bibliography{references}
+\end{document}

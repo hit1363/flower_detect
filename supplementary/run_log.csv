@@ -1,0 +1,1 @@
+run_started_utc,model_family,variant,epochs,saved_epochs,dataset_yaml,split_manifest_sha256,framework,framework_version,torch_version,python_version,gpu,seed,batch_size,image_size,status,run_directory,notes

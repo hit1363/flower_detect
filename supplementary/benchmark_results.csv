@@ -1,0 +1,1 @@
+model_family,variant,epoch,classes,total_parameters,trainable_parameters,precision,recall,f1,map50,map50_95,image_size,seed,batch_size,framework_version,torch_version,gpu,run_directory
